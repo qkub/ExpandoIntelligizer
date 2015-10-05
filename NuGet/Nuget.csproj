@@ -13,7 +13,9 @@
     <ConfigurationName>Release</ConfigurationName>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="ExpandoIntelligizerAddin.Fody.nuspec" />
+    <None Include="ExpandoIntelligizerAddin.Fody.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="install.ps1" />
     <None Include="packages.config" />
     <None Include="uninstall.ps1" />

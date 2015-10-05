@@ -8,11 +8,16 @@
     <owners>Bostjan Kukovec</owners>
     <developmentDependency>true</developmentDependency>
     <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
-    <projectUrl>http://github.com/Fody/ExpandoInteligizer.Fody</projectUrl>
+    <projectUrl>https://github.com/qkub/ExpandoIntelligizer</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <iconUrl>https://raw.github.com/Fody/BasicFodyAddin/master/Icons/package_icon.png</iconUrl>
-    <description>A Nuget Fody plugin for converting dictionary members into class level properties</description>
-    <summary />
+    <description>
+      A Nuget Fody plugin for converting dictionary members into class level properties
+
+      This is a fody add-in that helps transfering Dictionary&lt;string,object&gt; type of data structures into C# properties.
+      The reason for this i to have a Dictionary a like repository with strongly typed content.
+      In order to have intellisense support it is advised to leave repositories in a separate project.
+    </description>   
     <language>en-US</language>
     <tags>ILWeaving, Fody, Cecil</tags>
     <dependencies>
