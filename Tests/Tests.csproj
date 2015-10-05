@@ -88,7 +88,7 @@
       <Project>{e97e649f-b703-47e3-b18a-0871d3498742}</Project>
       <Name>AssemblyToProcess</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BasicFodyAddin\ExpandoIntelligizerFody.csproj">
+    <ProjectReference Include="..\ExpandoIntelligizerAddin\ExpandoIntelligizerFody.csproj">
       <Project>{C3578A7B-09A6-4444-9383-0DEAFA4958BD}</Project>
       <Name>ExpandoIntelligizerFody</Name>
     </ProjectReference>

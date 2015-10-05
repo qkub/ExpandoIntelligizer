@@ -36,7 +36,7 @@
     <PepitaPackage.CreatePackageTask NuGetBuildDirectory="$(SolutionDir)NuGetBuild" MetadataAssembly="$(SolutionDir)BasicFodyAddin\bin\$(ConfigurationName)\ExpandoIntelligizer.Fody.dll" />
   </Target>
   <ItemGroup>
-    <ProjectReference Include="..\BasicFodyAddin\ExpandoIntelligizerFody.csproj">
+    <ProjectReference Include="..\ExpandoIntelligizerAddin\ExpandoIntelligizerFody.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <Project>{C3578A7B-09A6-4444-9383-0DEAFA4958BD}</Project>
       <Name>ExpandoIntelligizerFody</Name>
