@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata minClientVersion="2.8">
+    <id>ExpandoIntelligizer.Fody</id>
+    <version>$version$</version>
+    <title>ExpandoIntelligizer.Fody</title>
+    <authors>Bostjan Kukovec</authors>
+    <owners>Bostjan Kukovec</owners>
+    <developmentDependency>true</developmentDependency>
+    <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
+    <projectUrl>http://github.com/Fody/ExpandoInteligizer.Fody</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <iconUrl>https://raw.github.com/Fody/BasicFodyAddin/master/Icons/package_icon.png</iconUrl>
+    <description>A Nuget Fody plugin for converting dictionary members into class level properties</description>
+    <summary />
+    <language>en-US</language>
+    <tags>ILWeaving, Fody, Cecil</tags>
+    <dependencies>
+      <dependency id="Fody" version="1.29.2"/>
+      <dependency id="Mono.Cecil" version="0.9.6"/>      
+    </dependencies>
+  </metadata>
+</package>
