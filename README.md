@@ -1,6 +1,6 @@
 ![Icon](https://raw.github.com/Fody/BasicFodyAddin/master/Icons/package_icon.png)
 
-      This is a fody add-in that helps transfering Dictionary&lt;string,object&gt; type of data structures into C# properties.
+      This is a fody add-in that helps transfering Dictionary<string,object> type of data structures into C# properties.
       The reason for this i to have a Dictionary a like repository with strongly typed content.
       In order to have intellisense support it is advised to leave repositories in a separate project. 
       
@@ -11,7 +11,7 @@
       {
         object GetKeyValue(string key);
         void SetKeyValue(string key,object value);
-        IDictionary&lt;string, object&gt; Data {get;}
+        IDictionary<string, object> Data {get;}
       }
 
       public class SeedRepository : ISeedSource
@@ -30,11 +30,11 @@
 
         public SeedRepository()
         {
-          var expandoDict = Expando as IDictionary&lt;String, Object&gt;     ;
-          expandoDict.Add(new KeyValuePair&lt;string, object&gt; ("Perestroika", "HasThisPayload"));
+          var expandoDict = Expando as IDictionary<String, Object>;
+          expandoDict.Add(new KeyValuePair<string, object> ("Perestroika", "HasThisPayload"));
         }
       }
       
       ------------------------------------------------------------------------------------------------------------
       var repository = new SeedRepository();
-      var pereContent = repository.Perestroika;  // &lt;----- dictionary key is now a property
+      var pereContent = repository.Perestroika;  // <----- dictionary key is now a property
