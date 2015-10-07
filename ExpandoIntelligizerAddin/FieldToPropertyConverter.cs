@@ -10,7 +10,7 @@ using MethodAttributes = Mono.Cecil.MethodAttributes;
 using MethodBody = Mono.Cecil.Cil.MethodBody;
 using rf=System.Reflection;
 
-public  class FieldToPropertyConverter
+public class FieldToPropertyConverter
 {
 
     MsCoreReferenceFinder msCoreReferenceFinder;
@@ -45,13 +45,18 @@ public  class FieldToPropertyConverter
     {
         var name = prop.Name;
         var propType = prop.PropertyType;
-                
-        var assemblyPayload = File.ReadAllBytes(MainModuleDef.Assembly.MainModule.FullyQualifiedName);
-        var dotnetModuleDefinitionAssembly = System.Reflection.Assembly.Load(assemblyPayload);
-        var seedSourceReflectionType = dotnetModuleDefinitionAssembly.GetType(typeDefinition.FullName, true, true);
-        var instance = Activator.CreateInstance(seedSourceReflectionType);
-        
-        IDictionary<string, object> propValues = seedSourceReflectionType.GetProperty(DICT_DATA_EXTRACTION_PROP_NAME).GetValue(instance, null) as IDictionary<string, object>;
+        FileInfo fiAssemblyPath = new FileInfo(MainModuleDef.Assembly.MainModule.FullyQualifiedName);
+        moduleWeaver.LogInfo(String.Format("Loading {0} assembly file for source object reflection instantiation!", fiAssemblyPath.FullName));
+
+        Type seedSourceReflectionType;
+        object instance;
+
+        InstantiateSourceDict(typeDefinition, fiAssemblyPath, out seedSourceReflectionType, out instance);
+
+        IDictionary<string, object> propValues = 
+            seedSourceReflectionType
+                .GetProperty(DICT_DATA_EXTRACTION_PROP_NAME)
+                    .GetValue(instance, null) as IDictionary<string, object>;
 
         foreach (var dictKeyName in propValues.Keys)
         {
@@ -96,9 +101,52 @@ public  class FieldToPropertyConverter
 
     }
 
+    private void InstantiateSourceDict(TypeDefinition typeDefinition, FileInfo fiAssemblyPath, out Type seedSourceReflectionType, out object instance)
+    {
+        var assemblyPayload = File.ReadAllBytes(fiAssemblyPath.FullName);
+        var targetClassicAssembly = System.Reflection.Assembly.Load(assemblyPayload);        
+        seedSourceReflectionType = targetClassicAssembly.GetType(typeDefinition.FullName, true, true);
+        AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+        instance = null;
+        instance = Activator.CreateInstance(seedSourceReflectionType);
+    }
+
+    private rf.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+    {   
+        var satelliteAssembly = moduleWeaver.ModuleDefinition.AssemblyResolver.Resolve(args.Name);
+        moduleWeaver.LogInfo(String.Format("---| Resolving assembly  [{0}] on behalf of [{1}]",args.Name,args.RequestingAssembly));
+        moduleWeaver.LogInfo(String.Format("---| Weavers FQAN [{0}] resolved at [{1}]", moduleWeaver.ModuleDefinition.FullyQualifiedName,satelliteAssembly.FullName));
+        moduleWeaver.LogInfo(String.Format("---| satelliteAssembly name [{0}] with argsname[{1}]", satelliteAssembly.Name, args.Name));
+        
+        foreach (var reff in moduleWeaver.ReferenceCopyLocalPaths)
+        {
+            moduleWeaver.LogInfo(String.Format("---|-- referenced module:[{0}] ", new FileInfo(reff).Name));
+        }
+
+        var referenceFiles = moduleWeaver.ReferenceCopyLocalPaths
+            .Select(p => new FileInfo(p))
+            .ToList<FileInfo>();
+
+        var assemblyFile = referenceFiles
+                                .Where(rf => rf.Name.Split('.').Count()>0 &&
+                                                rf.Name.Split('.')[0]==( (args.Name.Split(',')[0])))
+                                .FirstOrDefault();
+        moduleWeaver.LogInfo(String.Format("---|-- RESOLVED: assembly file to load:[{0}] ", assemblyFile?.FullName));
+
+        if (assemblyFile != null)
+        {
+            return rf.Assembly.ReflectionOnlyLoadFrom(assemblyFile.FullName);
+        }
+        else
+        {
+            moduleWeaver.LogErrorPoint(String.Format("---| Assembly file not found {0} at {1}", referenceFiles[0], args.Name.Split(',')[0]), new SequencePoint(new Document("")));
+        }
+        return null;
+    }
+
     private static TypeDefinition CreatePropertyExtractType(TypeDefinition typeDefinition, PropertyDefinition prop, string dictKeyName)
     {
-        var strFullNewTypeNamespace = String.Format("{0}.{1}", typeDefinition.Namespace, typeDefinition.Name);
+        var strFullNewTypeNamespace = String.Format("{0}.{1}Source", typeDefinition.Namespace, typeDefinition.Name);
         TypeDefinition staticNewSEEDTypeDef = new TypeDefinition(strFullNewTypeNamespace, dictKeyName, TypeAttributes.Class);
         staticNewSEEDTypeDef.IsPublic = true;
         staticNewSEEDTypeDef.BaseType = typeDefinition.BaseType;

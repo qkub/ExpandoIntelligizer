@@ -32,8 +32,7 @@ namespace AssemblyToProcess.SEREPO
             var expandoDict = Expando as IDictionary<String, Object>;
             expandoDict.Add(new KeyValuePair<string, object>("NamedList1", "test"));
             expandoDict.Add(new KeyValuePair<string, object>("SimpleObject", new Misko()));
-            expandoDict.Add(new KeyValuePair<string, object>("Perestroika", new Perestroika()));
-            
+            expandoDict.Add(new KeyValuePair<string, object>("Perestroika", new Perestroika()));            
         }
 
         public string NamedList1Or

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Linq;
 using Mono.Cecil;
-using Mono.Cecil.Rocks;
 using Mono.Cecil.Cil;
-using System.IO;
+using System.Collections.Generic;
 
 public class ModuleWeaver
 {
     // Will log an informational message to MSBuild
     public Action<string, SequencePoint> LogErrorPoint;
+    public Action<string, SequencePoint> LogInfoPoint;
     public Action<string> LogInfo { get; set; }
     public Action<string> LogWarning { get; set; }
 
@@ -16,7 +16,16 @@ public class ModuleWeaver
     // An instance of Mono.Cecil.ModuleDefinition for processing
     public ModuleDefinition ModuleDefinition { get; set; }
 
-    TypeSystem typeSystem;
+    public string Config { get; set; }
+    public string AddInDirectoryPath { get; set; }
+    public string AssemblyFilePath { get; set; }
+    public string AssemblyResolver { get; set; }        
+    public string References { get; set; }
+    public List<string> ReferenceCopyLocalPaths { get; set; }
+    public string ProjectDirectoryPath { get; set; }
+    public string SolutionDirectoryPath { get; set; }
+    public string DefineConstants { get; set; }
+    
 
     // Init logging delegates to make testing easier
     public ModuleWeaver()
